@@ -18,6 +18,27 @@ const taskTitleInput = document.getElementById('task-title');
 renderCalendarStructure();
 updateUI();
 
+// Mobile Day Selector Logic
+const daySelector = document.getElementById('day-selector');
+if (daySelector) {
+    daySelector.addEventListener('change', (e) => {
+        updateVisibleDay(parseInt(e.target.value));
+    });
+    // Set initial day (Monday = 0)
+    updateVisibleDay(0);
+}
+
+function updateVisibleDay(dayIndex) {
+    const columns = document.querySelectorAll('.day-column');
+    columns.forEach((col, index) => {
+        if (index === dayIndex) {
+            col.classList.add('active-day');
+        } else {
+            col.classList.remove('active-day');
+        }
+    });
+}
+
 // Event Listeners
 taskForm.addEventListener('submit', (e) => {
     e.preventDefault();

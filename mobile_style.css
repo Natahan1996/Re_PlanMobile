@@ -46,414 +46,394 @@ body {
 .app-container {
     display: flex;
     flex-direction: column;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    background: rgba(10, 10, 10, 0.7);
+}
 
-    :root {
-        /* ZZZ Palette */
-        --bg-app: #0a0a0a;
-        --bg-sidebar: rgba(16, 18, 23, 0.95);
-        --bg-card: rgba(30, 34, 45, 0.6);
-        --bg-slot: #0f1115;
-        --bg-slot-hover: #1a1d26;
+/* Calendar View - Mobile Optimized */
+.calendar-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: rgba(10, 10, 10, 0.5);
+    padding: 0;
+    /* Remove padding to let columns touch edges */
+    text-align: center;
+    font-weight: 700;
+    text-transform: uppercase;
+    overflow: hidden;
+}
 
-        --text-main: #ffffff;
-        --text-muted: #8b9bb4;
+.calendar-header {
+    display: none;
+    /* Hide top header in mobile portrait */
+}
 
-        --accent-primary: #ccff00;
-        /* Neon Green */
-        --accent-secondary: #00f3ff;
-        /* Electric Blue */
-        --accent-tertiary: #ff0055;
-        /* Hot Pink */
-        --accent-glow: rgba(204, 255, 0, 0.4);
+.calendar-grid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    /* Vertical stack */
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* No horizontal scroll */
+}
 
-        --border-color: rgba(255, 255, 255, 0.1);
-        --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+.day-column {
+    width: 100%;
+    /* Full width */
+    height: 1008px;
+    /* 24h * 42px */
+    position: relative;
+    border-bottom: var(--glass-border);
+    flex-shrink: 0;
+    display: none;
+    /* Hide by default */
+}
 
-        --font-main: 'Outfit', sans-serif;
-    }
+.day-column.active-day {
+    display: block;
+    /* Show only active */
+}
 
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        -webkit-tap-highlight-color: transparent;
-    }
+/* New Elements */
+.mobile-day-label {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    background: rgba(10, 10, 10, 0.9);
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--accent-primary);
+    color: var(--accent-primary);
+    font-weight: 800;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
 
-    body {
-        font-family: var(--font-main);
-        background-color: var(--bg-app);
-        background-image: url('zzz_bg.png');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        color: var(--text-main);
-        height: 100vh;
-        overflow: hidden;
-        /* Prevent body scroll, handle in containers */
-    }
+.day-bg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+    pointer-events: none;
+}
 
+/* Time Slots & Blocks */
+.blocked-time {
+    background: repeating-linear-gradient(45deg,
+            rgba(255, 255, 255, 0.03),
+            rgba(255, 255, 255, 0.03) 10px,
+            rgba(255, 255, 255, 0.05) 10px,
+            rgba(255, 255, 255, 0.05) 20px);
+    color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.scheduled-task {
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    background: rgba(30, 34, 45, 0.95);
+    border-left: 3px solid var(--accent-primary);
+    border-radius: 0 4px 4px 0;
+    padding: 0.3rem;
+    font-size: 0.7rem;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    overflow: hidden;
+    backdrop-filter: blur(4px);
+}
+
+.scheduled-task .time {
+    font-size: 0.6rem;
+    color: var(--accent-secondary);
+    margin-bottom: 1px;
+    font-weight: 600;
+}
+
+.scheduled-task.energy-high {
+    border-left-color: var(--accent-tertiary);
+}
+
+.scheduled-task.energy-med {
+    border-left-color: #ffaa00;
+}
+
+.scheduled-task.energy-low {
+    border-left-color: var(--accent-primary);
+}
+
+/* Sidebar - Mobile: Bottom Sheet / Drawer */
+.sidebar {
+    height: 45vh;
+    /* Take up bottom half */
+    width: 100%;
+    background-color: var(--bg-sidebar);
+    border-top: var(--glass-border);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: auto;
+    z-index: 20;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+}
+
+.brand {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.brand h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--text-main);
+    text-shadow: 0 0 10px var(--accent-glow);
+    font-style: italic;
+}
+
+.brand .subtitle {
+    display: none;
+    /* Hide subtitle on mobile to save space */
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    padding: 1rem;
+    /* Larger touch target */
+    font-family: var(--font-main);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--accent-primary);
+    color: black;
+    flex: 2;
+    box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.btn-secondary {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    flex: 1;
+}
+
+/* Dropdown Styling */
+.day-dropdown {
+    flex: 2;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.8rem;
+    border-radius: 4px;
+    font-family: var(--font-main);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    appearance: none;
+    /* Remove default arrow */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300f3ff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem top 50%;
+    background-size: 0.65rem auto;
+}
+
+/* Form */
+.task-input-section h2,
+.unscheduled-pool h2 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+    border-left: 3px solid var(--accent-tertiary);
+    padding-left: 0.5rem;
+}
+
+.form-group {
+    margin-bottom: 0.8rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+label {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 0.2rem;
+}
+
+input {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.8rem;
+    /* Larger touch target */
+    color: var(--text-main);
+    font-family: var(--font-main);
+    font-weight: 500;
+    font-size: 16px;
+    /* Prevent iOS zoom */
+}
+
+.btn-add {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px dashed var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    padding: 1rem;
+}
+
+/* Task Pool */
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-height: 80px;
+}
+
+.task-card {
+    background: var(--bg-card);
+    padding: 0.8rem;
+    border-radius: 4px;
+    border-left: 2px solid var(--accent-secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Mascot - Restored */
+.mascot-container {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 120px;
+    /* Smaller for mobile */
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.mascot-img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Stats */
+.stats-panel {
+    padding: 0.8rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.02);
+    position: relative;
+    z-index: 2;
+    /* Above mascot */
+}
+
+/* Mobile specific tweaks */
+#debug-btn {
+    display: none;
+    /* Hide debug on mobile */
+}
+
+/* Scrollbar hiding for cleaner mobile look */
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+/* Landscape Mode Optimization */
+@media (orientation: landscape) {
     .app-container {
-        display: flex;
-        flex-direction: column;
+        flex-direction: row;
+    }
+
+    .sidebar {
+        width: 300px;
         height: 100%;
-        backdrop-filter: blur(5px);
-        background: rgba(10, 10, 10, 0.7);
+        border-top: none;
+        border-right: var(--glass-border);
+        overflow-y: auto;
     }
 
-    /* Calendar View - Mobile Optimized */
     .calendar-view {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        background: rgba(10, 10, 10, 0.5);
-        padding: 0;
-        /* Remove padding to let columns touch edges */
-        text-align: center;
-        font-weight: 700;
-        text-transform: uppercase;
+        height: 100%;
         overflow: hidden;
-    }
-
-    .calendar-header {
-        display: none;
-        /* Hide top header in mobile portrait */
     }
 
     .calendar-grid {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        /* Vertical stack */
-        overflow-y: auto;
-        overflow-x: hidden;
-        /* No horizontal scroll */
+        /* Revert to horizontal in landscape? */
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
     }
 
     .day-column {
-        width: 100%;
-        /* Full width */
-        height: 1008px;
-        /* 24h * 42px */
-        position: relative;
-        border-bottom: var(--glass-border);
-        flex-shrink: 0;
-    }
-
-    /* New Elements */
-    .mobile-day-label {
-        position: sticky;
-        top: 0;
-        left: 0;
-        z-index: 20;
-        background: rgba(10, 10, 10, 0.9);
-        padding: 0.5rem;
-        border-bottom: 1px solid var(--accent-primary);
-        color: var(--accent-primary);
-        font-weight: 800;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        backdrop-filter: blur(5px);
-    }
-
-    .day-bg-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        background-position: center;
-        z-index: 0;
-        pointer-events: none;
-    }
-
-    /* Time Slots & Blocks */
-    .blocked-time {
-        background: repeating-linear-gradient(45deg,
-                rgba(255, 255, 255, 0.03),
-                rgba(255, 255, 255, 0.03) 10px,
-                rgba(255, 255, 255, 0.05) 10px,
-                rgba(255, 255, 255, 0.05) 20px);
-        color: rgba(255, 255, 255, 0.2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        position: absolute;
-        width: 100%;
-        left: 0;
-        z-index: 1;
-        pointer-events: none;
-    }
-
-    .scheduled-task {
-        position: absolute;
-        left: 2px;
-        right: 2px;
-        background: rgba(30, 34, 45, 0.95);
-        border-left: 3px solid var(--accent-primary);
-        border-radius: 0 4px 4px 0;
-        padding: 0.3rem;
-        font-size: 0.7rem;
-        color: white;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-        z-index: 2;
-        overflow: hidden;
-        backdrop-filter: blur(4px);
-    }
-
-    .scheduled-task .time {
-        font-size: 0.6rem;
-        color: var(--accent-secondary);
-        margin-bottom: 1px;
-        font-weight: 600;
-    }
-
-    .scheduled-task.energy-high {
-        border-left-color: var(--accent-tertiary);
-    }
-
-    .scheduled-task.energy-med {
-        border-left-color: #ffaa00;
-    }
-
-    .scheduled-task.energy-low {
-        border-left-color: var(--accent-primary);
-    }
-
-    /* Sidebar - Mobile: Bottom Sheet / Drawer */
-    .sidebar {
-        height: 45vh;
-        /* Take up bottom half */
-        width: 100%;
-        background-color: var(--bg-sidebar);
-        border-top: var(--glass-border);
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        overflow-y: auto;
-        z-index: 20;
-        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
-    }
-
-    .brand {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-    }
-
-    .brand h1 {
-        font-size: 1.5rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        color: var(--text-main);
-        text-shadow: 0 0 10px var(--accent-glow);
-        font-style: italic;
-    }
-
-    .brand .subtitle {
-        display: none;
-        /* Hide subtitle on mobile to save space */
-    }
-
-    /* Controls */
-    .controls {
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    button {
-        cursor: pointer;
-        border: none;
-        border-radius: 4px;
-        padding: 1rem;
-        /* Larger touch target */
-        font-family: var(--font-main);
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.9rem;
-        transition: all 0.2s ease;
-    }
-
-    .btn-primary {
-        background-color: var(--accent-primary);
-        color: black;
-        flex: 2;
-        box-shadow: 0 0 15px var(--accent-glow);
-    }
-
-    .btn-secondary {
-        background-color: rgba(255, 255, 255, 0.05);
-        border: 1px solid var(--border-color);
-        color: var(--text-main);
-        flex: 1;
-    }
-
-    /* Form */
-    .task-input-section h2,
-    .unscheduled-pool h2 {
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        margin-bottom: 0.5rem;
-        color: var(--text-muted);
-        border-left: 3px solid var(--accent-tertiary);
-        padding-left: 0.5rem;
-    }
-
-    .form-group {
-        margin-bottom: 0.8rem;
-    }
-
-    .form-row {
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    label {
-        display: block;
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        font-weight: 600;
-        color: var(--text-muted);
-        margin-bottom: 0.2rem;
-    }
-
-    input {
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.3);
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        padding: 0.8rem;
-        /* Larger touch target */
-        color: var(--text-main);
-        font-family: var(--font-main);
-        font-weight: 500;
-        font-size: 16px;
-        /* Prevent iOS zoom */
-    }
-
-    .btn-add {
-        width: 100%;
-        background-color: rgba(255, 255, 255, 0.03);
-        border: 1px dashed var(--border-color);
-        color: var(--text-muted);
-        font-size: 0.9rem;
-        padding: 1rem;
-    }
-
-    /* Task Pool */
-    .task-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        min-height: 80px;
-    }
-
-    .task-card {
-        background: var(--bg-card);
-        padding: 0.8rem;
-        border-radius: 4px;
-        border-left: 2px solid var(--accent-secondary);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    /* Mascot - Restored */
-    .mascot-container {
-        display: block;
-        position: absolute;
-        bottom: 0;
-        right: 0;
         width: 120px;
-        /* Smaller for mobile */
-        opacity: 0.8;
-        pointer-events: none;
-        z-index: 1;
-    }
-
-    .mascot-img {
-        width: 100%;
-        height: auto;
+        height: 100%;
+        flex-shrink: 0;
         display: block;
+        /* Show all in landscape */
     }
 
-    /* Stats */
-    .stats-panel {
-        padding: 0.8rem;
-        border-radius: 4px;
-        border: 1px solid var(--border-color);
-        background: rgba(255, 255, 255, 0.02);
-        position: relative;
-        z-index: 2;
-        /* Above mascot */
+    .mobile-day-label {
+        /* Adjust for horizontal layout */
+        position: static;
+        font-size: 0.8rem;
     }
 
-    /* Mobile specific tweaks */
-    #debug-btn {
-        display: none;
-        /* Hide debug on mobile */
+    .mascot-container {
+        width: 180px;
+        /* Larger in landscape */
     }
-
-    /* Scrollbar hiding for cleaner mobile look */
-    ::-webkit-scrollbar {
-        width: 4px;
-        height: 4px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 2px;
-    }
-
-    /* Landscape Mode Optimization */
-    @media (orientation: landscape) {
-        .app-container {
-            flex-direction: row;
-        }
-
-        .sidebar {
-            width: 300px;
-            height: 100%;
-            border-top: none;
-            border-right: var(--glass-border);
-            overflow-y: auto;
-        }
-
-        .calendar-view {
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .calendar-grid {
-            /* Revert to horizontal in landscape? */
-            flex-direction: row;
-            overflow-x: auto;
-            overflow-y: hidden;
-        }
-
-        .day-column {
-            width: 120px;
-            height: 100%;
-            flex-shrink: 0;
-        }
-
-        .mobile-day-label {
-            /* Adjust for horizontal layout */
-            position: static;
-            font-size: 0.8rem;
-        }
-
-        .mascot-container {
-            width: 180px;
-            /* Larger in landscape */
-        }
-    }
+}
