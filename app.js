@@ -128,7 +128,7 @@ function renderTaskPool() {
 function renderCalendarStructure() {
     calendarGrid.innerHTML = '';
 
-    // Update Headers with Dates
+    // Update Headers with Dates (Keep for desktop/landscape compatibility if needed, but we hide in mobile portrait)
     const headerCells = document.querySelectorAll('.day-header');
     scheduler.days.forEach((day, index) => {
         if (headerCells[index]) {
@@ -142,31 +142,38 @@ function renderCalendarStructure() {
         col.className = 'day-column';
         col.id = `day-col-${index}`;
 
+        // Add Day Header inside the column (for vertical layout)
+        const dayLabel = document.createElement('div');
+        dayLabel.className = 'mobile-day-label';
+        dayLabel.innerHTML = `${day.name} <span class="date-sub">${day.dateStr}</span> <span class="capacity">${day.energyCapacity}e</span>`;
+        col.appendChild(dayLabel);
+
         // Apply Theme
         if (day.theme) {
             col.classList.add(`theme-${day.theme}`);
         }
 
-        // Passed Day Blocking
+        // Background Image (Anime Girl)
+        const bgOverlay = document.createElement('div');
+        bgOverlay.className = 'day-bg-overlay';
+        const images = [
+            'anime_girl_mon.png',
+            'anime_girl_tue.png',
+            'anime_girl_wed.png',
+            'anime_girl_thu.png',
+            'anime_girl_fri.png',
+            'anime_girl_sat.png',
+            'anime_girl_sun.png'
+        ];
+        // Use index % 7 to be safe
+        bgOverlay.style.backgroundImage = `linear-gradient(rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0.85)), url('${images[index]}')`;
+        col.appendChild(bgOverlay);
+
+        // Passed Day Styling
         if (day.isPassed) {
             col.classList.add('passed-day');
-            const overlay = document.createElement('div');
-            overlay.className = 'passed-day-overlay';
-
-            // Map index to image
-            const images = [
-                'anime_girl_mon.png',
-                'anime_girl_tue.png',
-                'anime_girl_wed.png',
-                'anime_girl_thu.png',
-                'anime_girl_fri.png',
-                'anime_girl_sat.png',
-                'anime_girl_sun.png'
-            ];
-
-            // Use background image style
-            overlay.style.backgroundImage = `url('${images[index]}')`;
-            col.appendChild(overlay);
+            // Make it darker
+            bgOverlay.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.95)), url('${images[index]}')`;
         }
 
         // Render Blocked Ranges (Work)
@@ -177,6 +184,7 @@ function renderCalendarStructure() {
             // View starts at 0:00 (0min)
             const viewStart = 0;
             const viewDuration = 1440; // 24 hours
+            const PIXELS_PER_MINUTE = 0.7;
 
             let start = block.start;
             let end = block.end;
@@ -186,7 +194,6 @@ function renderCalendarStructure() {
             if (end > viewStart + viewDuration) end = viewStart + viewDuration;
 
             if (end > start) {
-                const PIXELS_PER_MINUTE = 0.7;
                 const top = (start - viewStart) * PIXELS_PER_MINUTE;
                 const height = (end - start) * PIXELS_PER_MINUTE;
 
