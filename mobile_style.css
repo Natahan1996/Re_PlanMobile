@@ -39,7 +39,8 @@ body {
     background-attachment: fixed;
     color: var(--text-main);
     height: 100vh;
-    overflow: hidden; /* Prevent body scroll, handle in containers */
+    overflow: hidden;
+    /* Prevent body scroll, handle in containers */
 }
 
 .app-container {
@@ -52,7 +53,8 @@ body {
 
 /* Calendar View - Mobile Optimized */
 .calendar-view {
-    flex: 1; /* Takes remaining space */
+    flex: 1;
+    /* Takes remaining space */
     display: flex;
     flex-direction: column;
     background: rgba(10, 10, 10, 0.5);
@@ -60,7 +62,8 @@ body {
     text-align: center;
     font-weight: 700;
     text-transform: uppercase;
-    overflow: hidden; /* Internal scrolling */
+    overflow: hidden;
+    /* Internal scrolling */
 }
 
 .calendar-header {
@@ -68,8 +71,10 @@ body {
     border-bottom: var(--glass-border);
     padding-bottom: 0.5rem;
     margin-bottom: 0.5rem;
-    overflow-x: auto; /* Allow header to scroll if needed, though we'll sync or fix it */
-    scrollbar-width: none; /* Hide scrollbar */
+    overflow-x: auto;
+    /* Allow header to scroll if needed, though we'll sync or fix it */
+    scrollbar-width: none;
+    /* Hide scrollbar */
 }
 
 .calendar-header::-webkit-scrollbar {
@@ -77,7 +82,8 @@ body {
 }
 
 .day-header {
-    flex: 0 0 120px; /* Fixed width per day */
+    flex: 0 0 120px;
+    /* Fixed width per day */
     border-right: var(--glass-border);
     display: flex;
     flex-direction: column;
@@ -106,15 +112,19 @@ body {
 
 .calendar-grid {
     flex: 1;
-    display: flex; /* Horizontal layout */
-    overflow: auto; /* Both directions */
+    display: flex;
+    /* Horizontal layout */
+    overflow: auto;
+    /* Both directions */
     scroll-snap-type: x mandatory;
 }
 
 .day-column {
-    flex: 0 0 120px; /* Match header width */
+    flex: 0 0 120px;
+    /* Match header width */
     border-right: var(--glass-border);
-    height: 1008px; /* 24h * 42px */
+    height: 1008px;
+    /* 24h * 42px */
     position: relative;
     background: rgba(0, 0, 0, 0.2);
     background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
@@ -166,13 +176,22 @@ body {
     font-weight: 600;
 }
 
-.scheduled-task.energy-high { border-left-color: var(--accent-tertiary); }
-.scheduled-task.energy-med { border-left-color: #ffaa00; }
-.scheduled-task.energy-low { border-left-color: var(--accent-primary); }
+.scheduled-task.energy-high {
+    border-left-color: var(--accent-tertiary);
+}
+
+.scheduled-task.energy-med {
+    border-left-color: #ffaa00;
+}
+
+.scheduled-task.energy-low {
+    border-left-color: var(--accent-primary);
+}
 
 /* Sidebar - Mobile: Bottom Sheet / Drawer */
 .sidebar {
-    height: 45vh; /* Take up bottom half */
+    height: 45vh;
+    /* Take up bottom half */
     width: 100%;
     background-color: var(--bg-sidebar);
     border-top: var(--glass-border);
@@ -182,7 +201,7 @@ body {
     gap: 1rem;
     overflow-y: auto;
     z-index: 20;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
 }
 
 .brand {
@@ -201,7 +220,8 @@ body {
 }
 
 .brand .subtitle {
-    display: none; /* Hide subtitle on mobile to save space */
+    display: none;
+    /* Hide subtitle on mobile to save space */
 }
 
 /* Controls */
@@ -214,7 +234,8 @@ button {
     cursor: pointer;
     border: none;
     border-radius: 4px;
-    padding: 1rem; /* Larger touch target */
+    padding: 1rem;
+    /* Larger touch target */
     font-family: var(--font-main);
     font-weight: 700;
     text-transform: uppercase;
@@ -270,11 +291,13 @@ input {
     background-color: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--border-color);
     border-radius: 4px;
-    padding: 0.8rem; /* Larger touch target */
+    padding: 0.8rem;
+    /* Larger touch target */
     color: var(--text-main);
     font-family: var(--font-main);
     font-weight: 500;
-    font-size: 16px; /* Prevent iOS zoom */
+    font-size: 16px;
+    /* Prevent iOS zoom */
 }
 
 .btn-add {
@@ -304,8 +327,23 @@ input {
     align-items: center;
 }
 
+/* Mascot - Restored */
 .mascot-container {
-    display: none; /* Hide mascot on mobile to save space */
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 120px;
+    /* Smaller for mobile */
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.mascot-img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 /* Stats */
@@ -313,12 +351,16 @@ input {
     padding: 0.8rem;
     border-radius: 4px;
     border: 1px solid var(--border-color);
-    background: rgba(255,255,255,0.02);
+    background: rgba(255, 255, 255, 0.02);
+    position: relative;
+    z-index: 2;
+    /* Above mascot */
 }
 
 /* Mobile specific tweaks */
 #debug-btn {
-    display: none; /* Hide debug on mobile */
+    display: none;
+    /* Hide debug on mobile */
 }
 
 /* Scrollbar hiding for cleaner mobile look */
@@ -326,5 +368,42 @@ input {
     width: 4px;
     height: 4px;
 }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+/* Landscape Mode Optimization */
+@media (orientation: landscape) {
+    .app-container {
+        flex-direction: row;
+    }
+
+    .sidebar {
+        width: 300px;
+        height: 100%;
+        border-top: none;
+        border-right: var(--glass-border);
+        overflow-y: auto;
+    }
+
+    .calendar-view {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .calendar-grid {
+        /* In landscape, maybe we can fit more? */
+        /* Keep horizontal scroll but maybe wider columns? */
+    }
+
+    .mascot-container {
+        width: 180px;
+        /* Larger in landscape */
+    }
+}
