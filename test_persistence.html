@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Persistence Test</title>
+</head>
+
+<body>
+    <h1>Persistence Test Results</h1>
+    <div id="results">Running...</div>
+    <script src="scheduler.js"></script>
+    <script>
+        const resultsDiv = document.getElementById('results');
+        let log = '';
+
+        function assert(condition, message) {
+            if (condition) {
+                log += `<div style="color: green">✅ ${message}</div>`;
+            } else {
+                log += `<div style="color: red">❌ ${message}</div>`;
+            }
+        }
+
+        try {
+            // 1. Clear Storage
+            localStorage.clear();
+
+            // 2. Create Scheduler 1
+            const scheduler1 = new Scheduler();
+            const task = scheduler1.addTask("Persistence Test Task", 60, 20);
+            scheduler1.autoAssign();
+
+            assert(scheduler1.tasks.length === 1, "Scheduler 1 has 1 task");
+            assert(task.scheduled === true, "Task is scheduled in Scheduler 1");
+
+            // 3. Create Scheduler 2 (Simulate Reload)
+            const scheduler2 = new Scheduler();
+
+            assert(scheduler2.tasks.length === 1, "Scheduler 2 loaded 1 task");
+
+            if (scheduler2.tasks.length > 0) {
+                const loadedTask = scheduler2.tasks[0];
+                assert(loadedTask.title === "Persistence Test Task", "Loaded task has correct title");
+                assert(loadedTask.scheduled === true, "Loaded task is marked as scheduled");
+
+                let isScheduledInDays = false;
+                scheduler2.days.forEach(day => {
+                    if (day.scheduledItems.some(item => item.task.id === loadedTask.id)) {
+                        isScheduledInDays = true;
+                    }
+                });
+                assert(isScheduledInDays === true, "Loaded task is present in a day's scheduledItems");
+            }
+
+        } catch (e) {
+            log += `<div style="color: red">❌ Error: ${e.message}</div>`;
+            console.error(e);
+        }
+
+        resultsDiv.innerHTML = log;
+    </script>
+</body>
+
+</html>
