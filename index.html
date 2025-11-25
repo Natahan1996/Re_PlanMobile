@@ -16,68 +16,94 @@
 <body>
     <div class="app-container">
         <!-- Sidebar for Controls -->
-        <form id="task-form">
-            <div class="form-group">
-                <label for="task-title">Task Name</label>
-                <input type="text" id="task-title" placeholder="e.g., Gym, Deep Work" required>
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>Re:Plan</h1>
+                <p class="subtitle">Optimize your week</p>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="task-frequency">Frequency</label>
-                    <input type="number" id="task-frequency" value="1" min="1" max="7">
-                </div>
-                <div class="form-group">
-                    <label for="task-duration">Duration (min)</label>
-                    <input type="number" id="task-duration" value="60" step="15" min="15">
-                </div>
-                <div class="form-group">
-                    <label for="task-energy">Energy</label>
-                    <input type="number" id="task-energy" value="10" min="1" max="100">
+            <div class="controls">
+                <select id="day-selector" class="day-dropdown">
+                    <option value="0">Monday</option>
+                    <option value="1">Tuesday</option>
+                    <option value="2">Wednesday</option>
+                    <option value="3">Thursday</option>
+                    <option value="4">Friday</option>
+                    <option value="5">Saturday</option>
+                    <option value="6">Sunday</option>
+                </select>
+                <button id="auto-schedule-btn" class="btn-primary">
+                    <span class="icon">✨</span> Auto
+                </button>
+                <button id="clear-btn" class="btn-secondary">Clear</button>
+            </div>
+            <button id="debug-btn" class="btn-secondary"
+                style="margin-top: 0.5rem; font-size: 0.7rem; padding: 0.4rem;">🐞 Debug Info</button>
+
+            <div class="task-input-section">
+                <h2>Add New Task</h2>
+                <form id="task-form">
+                    <div class="form-group">
+                        <label for="task-title">Task Name</label>
+                        <input type="text" id="task-title" placeholder="e.g., Gym, Deep Work" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-frequency">Frequency</label>
+                            <input type="number" id="task-frequency" value="1" min="1" max="7">
+                        </div>
+                        <div class="form-group">
+                            <label for="task-duration">Duration (min)</label>
+                            <input type="number" id="task-duration" value="60" step="15" min="15">
+                        </div>
+                        <div class="form-group">
+                            <label for="task-energy">Energy</label>
+                            <input type="number" id="task-energy" value="10" min="1" max="100">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-add">Add to Pool</button>
+                </form>
+            </div>
+
+            <div class="unscheduled-pool">
+                <h2>Task Pool</h2>
+                <div id="task-pool-list" class="task-list">
+                    <!-- Unscheduled tasks go here -->
+                    <div class="empty-state">No tasks in pool</div>
                 </div>
             </div>
 
-            <button type="submit" class="btn-add">Add to Pool</button>
-        </form>
-    </div>
+            <div class="stats-panel">
+                <h3>Weekly Stats</h3>
+                <div class="stat-row">
+                    <span>Energy Used:</span>
+                    <span id="total-energy-used">0 / 450</span>
+                </div>
+            </div>
 
-    <div class="unscheduled-pool">
-        <h2>Task Pool</h2>
-        <div id="task-pool-list" class="task-list">
-            <!-- Unscheduled tasks go here -->
-            <div class="empty-state">No tasks in pool</div>
-        </div>
-    </div>
+            <div class="mascot-container">
+                <img src="mascot_face.png" alt="Mascot" class="mascot-img">
+            </div>
+        </aside>
 
-    <div class="stats-panel">
-        <h3>Weekly Stats</h3>
-        <div class="stat-row">
-            <span>Energy Used:</span>
-            <span id="total-energy-used">0 / 450</span>
-        </div>
-    </div>
+        <!-- Main Calendar View -->
+        <main class="calendar-view">
+            <header class="calendar-header">
+                <div class="day-header">Mon <span class="capacity">30e</span></div>
+                <div class="day-header">Tue <span class="capacity">30e</span></div>
+                <div class="day-header">Wed <span class="capacity">30e</span></div>
+                <div class="day-header">Thu <span class="capacity">30e</span></div>
+                <div class="day-header">Fri <span class="capacity">30e</span></div>
+                <div class="day-header weekend">Sat <span class="capacity">100e</span></div>
+                <div class="day-header weekend">Sun <span class="capacity">100e</span></div>
+            </header>
 
-    <div class="mascot-container">
-        <img src="mascot_face.png" alt="Mascot" class="mascot-img">
-    </div>
-    </aside>
-
-    <!-- Main Calendar View -->
-    <main class="calendar-view">
-        <header class="calendar-header">
-            <div class="day-header">Mon <span class="capacity">30e</span></div>
-            <div class="day-header">Tue <span class="capacity">30e</span></div>
-            <div class="day-header">Wed <span class="capacity">30e</span></div>
-            <div class="day-header">Thu <span class="capacity">30e</span></div>
-            <div class="day-header">Fri <span class="capacity">30e</span></div>
-            <div class="day-header weekend">Sat <span class="capacity">100e</span></div>
-            <div class="day-header weekend">Sun <span class="capacity">100e</span></div>
-        </header>
-
-        <div class="calendar-grid" id="calendar-grid">
-            <!-- Time slots and tasks will be generated here -->
-        </div>
-    </main>
+            <div class="calendar-grid" id="calendar-grid">
+                <!-- Time slots and tasks will be generated here -->
+            </div>
+        </main>
     </div>
 
     <script src="scheduler.js"></script>
